@@ -24,6 +24,7 @@
 .cartList .img {
   border-radius: 1rem;
   overflow: hidden;
+  cursor: pointer;
 }
 .cartList .img img {
   width: 10rem;
@@ -51,6 +52,11 @@
   border-radius: 1rem;
   outline: none;
 }
+
+.cartList .count button:disabled {
+  display: none;
+}
+
 .cartList > button {
   padding: 1rem 1.5rem;
   background-color: transparent;

@@ -7,7 +7,7 @@ import Cart from "./Cart";
 import Detail from "./Detail";
 import { useEffect, useState } from "react";
 import axios from "axios";
-// import { list } from '../productData';
+// import { list } from "../productData";
 
 function App() {
   let [productData, setProductData] = useState([]);
@@ -27,7 +27,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Main productData={productData} />} />
-          <Route path="shop_list" element={<ShopList />} />
+          <Route
+            path="shop_list"
+            element={<ShopList productData={productData} />}
+          />
           <Route
             path="detail/:id"
             element={<Detail productData={productData} />}

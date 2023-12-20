@@ -1,13 +1,14 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import cssStyle from "../css/Cart.module.css";
+import { plusCount, minusCount, delItem } from "../store/cartList";
+import { useNavigate } from "react-router-dom";
 
 export default function Cart() {
   let user = useSelector((a) => a.user);
   let itemStock = useSelector((a) => a.stock);
   let cartList = useSelector((a) => a.cartList);
-
-  console.log(cartList[1].count);
-  console.log(cartList[1].price);
+  let dispatch = useDispatch();
+  let navigate = useNavigate();
 
   let iconTrash = (
     <svg
@@ -31,21 +32,35 @@ export default function Cart() {
         {cartList.map((item) => (
           <li className={cssStyle.cartList} key={item._id}>
             <div className={cssStyle.img}>
-              <img src={`/img/${item.img}`} alt={item.title} />
+              <img
+                src={`/img/${item.img}`}
+                alt={item.title}
+                onClick={() => {
+                  navigate(`/detail/${item._id}`);
+                }}
+              />
             </div>
             <div className={cssStyle.title}>{item.title}</div>
             <div className={cssStyle.num}>
               {Number(item.price).toLocaleString()} 원
             </div>
             <div className={cssStyle.count}>
-              <button>-</button>
+              {item.count <= 1 ? (
+                <button disabled>-</button>
+              ) : (
+                <button onClick={() => dispatch(minusCount(item._id))}>
+                  -
+                </button>
+              )}
               <span>{item.count}</span>
-              <button>+</button>
+              <button onClick={() => dispatch(plusCount(item._id))}>+</button>
             </div>
             <div className={cssStyle.num}>
               {Number(item.price * item.count).toLocaleString()} 원
             </div>
-            <button>{iconTrash}</button>
+            <button onClick={() => dispatch(delItem(item._id))}>
+              {iconTrash}
+            </button>
           </li>
         ))}
       </ul>

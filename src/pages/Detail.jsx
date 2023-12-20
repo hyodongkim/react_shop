@@ -1,29 +1,23 @@
-import { useParams } from 'react-router-dom';
-import { Tab, Tabs } from 'react-bootstrap';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
-
-import cssStyle from '../css/Detail.module.css';
-import Count from '../components/Count';
-import ProductCard from '../components/ProductCard';
-import { useEffect, useState } from 'react';
-
-export default function Detail({ productData }) {
-  // 컨포넌트는
-  // 1. 생성될 수 있고 (mount)
-  // 2. 재 랜더링 될 수 있고 (update)
-  // 3. 삭제될 수 있다. (unmount)
-  //
-  // class Detail extends React.Component{
-  //   componentDidMount(){ 장착될 때 실행될 함수}
-  //   componentDidUpdate(){ 업데이트 될 때 실행될 함수}
-  //   componentWillUnmount(){ 컨포넌트가 제거될  때 실행되는 함수}
-  // }
-  let [open, setOpen] = useState(true);
-
+import { useParams } from "react-router-dom";
+import { Tab, Tabs } from "react-bootstrap";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import cssStyle from "../css/Detail.module.css";
+// import Count from '../components/Count';
+import ProductCard from "../components/ProductCard";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "../store/cartList";
+import Modal from "../components/Modal";
+export default function Detail() {
   let { id } = useParams();
+  let productData = useSelector((a) => a.pData);
   let item = productData.find((a) => String(a._id) === id);
   let similar = productData.filter((a) => a.category === item.category);
+  let [open, setOpen] = useState(true);
+  let [count, setCount] = useState(1);
+  let dispatch = useDispatch();
+  let [modal, setModal] = useState(false);
   useEffect(() => {
     let timmer = setTimeout(() => {
       setOpen(false);
@@ -35,19 +29,19 @@ export default function Detail({ productData }) {
   }, [id]);
   return (
     <main>
+      {modal && <Modal setModal={setModal} />}
       {open && (
         <div
           style={{
-            backgroundColor: 'green',
-            color: 'white',
-            textAlign: 'center',
-            padding: '2rem 0',
+            backgroundColor: "green",
+            color: "white",
+            textAlign: "center",
+            padding: "2rem 0",
           }}
         >
           2초 안에 클릭하시오
         </div>
       )}
-
       <div className={cssStyle.detailCon}>
         <div className={cssStyle.img}>
           <img src={`/img/${item.img}`} alt={item.title} />
@@ -55,10 +49,46 @@ export default function Detail({ productData }) {
         <div className={cssStyle.desc}>
           <strong>{item.title}</strong>
           <span>{Number(item.price).toLocaleString()}원</span>
-          <Count />
+          <div className={cssStyle.count}>
+            {count <= 1 ? (
+              <button disabled>-</button>
+            ) : (
+              <button
+                onClick={() => {
+                  setCount((prev) => prev - 1);
+                }}
+              >
+                -
+              </button>
+            )}
+            <span>{count}</span>
+            <button
+              onClick={() => {
+                setCount((prev) => prev + 1);
+              }}
+            >
+              +
+            </button>
+            <button
+              onClick={() => {
+                setModal(true);
+                dispatch(
+                  addItem({
+                    _id: item._id,
+                    title: item.title,
+                    img: item.img,
+                    price: item.price,
+                    count: count,
+                  })
+                );
+              }}
+            >
+              ADD CART
+            </button>
+          </div>
         </div>
       </div>
-      <div style={{ padding: '50px 0' }}>
+      <div style={{ padding: "50px 0" }}>
         <Tabs
           defaultActiveKey="Description"
           id="fill-tab-example"
