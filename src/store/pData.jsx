@@ -1,11 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
 
 const result = await axios
-  .get("https://carrepe.github.io/datalist/productData.json.json")
-  .then((res) => res.data.list);
+  .get('https://carrepe.github.io/datalist/productData.json.json')
+  .then((res) => res.data.list); //
 
 export let pData = createSlice({
-  name: "pData",
+  name: 'pData',
   initialState: result,
 });

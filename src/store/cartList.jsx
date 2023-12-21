@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
-import cartData from "./cartData";
+import cartData from './cartData';
 
 export let cartList = createSlice({
-  name: "cartList",
+  name: 'cartList',
   initialState: cartData,
   reducers: {
     plusCount(prev, action) {

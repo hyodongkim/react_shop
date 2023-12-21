@@ -1,16 +1,10 @@
 import cssStyle from '../css/ShopList.module.css';
 import ProductCard from '../components/ProductCard';
 import { useState } from 'react';
-export default function ShopList({ productData }) {
-  // 고차함수의 종류
-  // 1. [].map((a,i,arry)=>{}) (새로운 배열로 반환)
-  // 2. [].filter((a)=>{}) (새로운 배열로 반환)
-  // 3. [1,2,3,4].reduce(()=>{})
-  // 4. [].find(()=>{})
-  // 5. [].some(()=>{})
-  // 6. [].every(()=>{})
-  // 7. [].sort((a,b)=>a-b)
-  // 7. [].sort((a,b)=>b-a)
+import { useSelector } from 'react-redux';
+export default function ShopList() {
+  let productData = useSelector((a) => a.pData);
+
   let [reList, setReList] = useState(productData);
   return (
     <main className={cssStyle.shopList}>

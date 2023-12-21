@@ -1,40 +1,18 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "./Layout";
-import Company from "./Company";
-import Main from "./Main";
-import ShopList from "./ShopList";
-import Cart from "./Cart";
-import Detail from "./Detail";
-import { useEffect, useState } from "react";
-import axios from "axios";
-// import { list } from "../productData";
-
+import { Route, Routes } from 'react-router-dom';
+import Layout from './Layout';
+import Company from './Company';
+import Main from './Main';
+import ShopList from './ShopList';
+import Cart from './Cart';
+import Detail from './Detail';
 function App() {
-  let [productData, setProductData] = useState([]);
-
-  useEffect(() => {
-    const loadData = async () => {
-      const result = await axios.get(
-        "https://carrepe.github.io/datalist/productData.json.json"
-      );
-      setProductData(result.data.list);
-    };
-    loadData();
-  }, []);
-
   return (
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route path="/" element={<Main productData={productData} />} />
-          <Route
-            path="shop_list"
-            element={<ShopList productData={productData} />}
-          />
-          <Route
-            path="detail/:id"
-            element={<Detail productData={productData} />}
-          />
+          <Route path="/" element={<Main />} />
+          <Route path="shop_list" element={<ShopList />} />
+          <Route path="detail/:id" element={<Detail />} />
           <Route path="blog" element={<>블로그 페이지 입니다.</>} />
           <Route path="our" element={<Company />}>
             <Route path="ceo" element={<>ceo 인사말</>} />

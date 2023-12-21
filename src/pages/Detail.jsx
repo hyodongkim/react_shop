@@ -1,23 +1,27 @@
-import { useParams } from "react-router-dom";
-import { Tab, Tabs } from "react-bootstrap";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import cssStyle from "../css/Detail.module.css";
+import { useParams } from 'react-router-dom';
+import { Tab, Tabs } from 'react-bootstrap';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation } from 'swiper/modules';
+
+import cssStyle from '../css/Detail.module.css';
 // import Count from '../components/Count';
-import ProductCard from "../components/ProductCard";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../store/cartList";
-import Modal from "../components/Modal";
+import ProductCard from '../components/ProductCard';
+import Modal from '../components/Modal';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../store/cartList';
+
 export default function Detail() {
   let { id } = useParams();
   let productData = useSelector((a) => a.pData);
   let item = productData.find((a) => String(a._id) === id);
   let similar = productData.filter((a) => a.category === item.category);
+
   let [open, setOpen] = useState(true);
   let [count, setCount] = useState(1);
-  let dispatch = useDispatch();
   let [modal, setModal] = useState(false);
+  let dispatch = useDispatch();
+
   useEffect(() => {
     let timmer = setTimeout(() => {
       setOpen(false);
@@ -27,21 +31,28 @@ export default function Detail() {
       clearTimeout(timmer);
     };
   }, [id]);
+
+  let watched = JSON.parse(localStorage.getItem('watched') || '[]');
+  let update = [...new Set([...watched, item._id])];
+  localStorage.setItem('watched', JSON.stringify(update));
+
   return (
     <main>
       {modal && <Modal setModal={setModal} />}
+
       {open && (
         <div
           style={{
-            backgroundColor: "green",
-            color: "white",
-            textAlign: "center",
-            padding: "2rem 0",
+            backgroundColor: 'green',
+            color: 'white',
+            textAlign: 'center',
+            padding: '2rem 0',
           }}
         >
           2초 안에 클릭하시오
         </div>
       )}
+
       <div className={cssStyle.detailCon}>
         <div className={cssStyle.img}>
           <img src={`/img/${item.img}`} alt={item.title} />
@@ -61,6 +72,7 @@ export default function Detail() {
                 -
               </button>
             )}
+
             <span>{count}</span>
             <button
               onClick={() => {
@@ -71,7 +83,6 @@ export default function Detail() {
             </button>
             <button
               onClick={() => {
-                setModal(true);
                 dispatch(
                   addItem({
                     _id: item._id,
@@ -81,6 +92,7 @@ export default function Detail() {
                     count: count,
                   })
                 );
+                setModal(true);
               }}
             >
               ADD CART
@@ -88,7 +100,7 @@ export default function Detail() {
           </div>
         </div>
       </div>
-      <div style={{ padding: "50px 0" }}>
+      <div style={{ padding: '50px 0' }}>
         <Tabs
           defaultActiveKey="Description"
           id="fill-tab-example"

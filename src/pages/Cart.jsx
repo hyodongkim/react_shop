@@ -1,15 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import cssStyle from "../css/Cart.module.css";
-import { plusCount, minusCount, delItem } from "../store/cartList";
-import { useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from 'react-redux';
+import cssStyle from '../css/Cart.module.css';
+import { changeName, changeRate } from '../store/user';
+import { plusCount, minusCount, delItem } from '../store/cartList';
+import { useNavigate } from 'react-router-dom';
 export default function Cart() {
   let user = useSelector((a) => a.user);
-  let itemStock = useSelector((a) => a.stock);
   let cartList = useSelector((a) => a.cartList);
   let dispatch = useDispatch();
   let navigate = useNavigate();
-
   let iconTrash = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -24,21 +22,32 @@ export default function Cart() {
     <main className={cssStyle.cart}>
       <h2>Shopping cart</h2>
       <p>
-        <span>{user.name}</span> have 3 item in your cart
+        <span>
+          {user.name} / {user.rating}등급
+        </span>
+        have <span>{cartList.length}</span>item in your cart
       </p>
-      <p>{itemStock}</p>
+      <p>
+        <button
+          onClick={() => {
+            dispatch(changeName());
+            dispatch(changeRate(10));
+          }}
+        >
+          회원정보 변경
+        </button>
+      </p>
       <hr />
       <ul>
         {cartList.map((item) => (
           <li className={cssStyle.cartList} key={item._id}>
-            <div className={cssStyle.img}>
-              <img
-                src={`/img/${item.img}`}
-                alt={item.title}
-                onClick={() => {
-                  navigate(`/detail/${item._id}`);
-                }}
-              />
+            <div
+              className={cssStyle.img}
+              onClick={() => {
+                navigate(`/detail/${item._id}`);
+              }}
+            >
+              <img src={`/img/${item.img}`} alt={item.title} />
             </div>
             <div className={cssStyle.title}>{item.title}</div>
             <div className={cssStyle.num}>
@@ -48,17 +57,31 @@ export default function Cart() {
               {item.count <= 1 ? (
                 <button disabled>-</button>
               ) : (
-                <button onClick={() => dispatch(minusCount(item._id))}>
+                <button
+                  onClick={() => {
+                    dispatch(minusCount(item._id));
+                  }}
+                >
                   -
                 </button>
               )}
               <span>{item.count}</span>
-              <button onClick={() => dispatch(plusCount(item._id))}>+</button>
+              <button
+                onClick={() => {
+                  dispatch(plusCount(item._id));
+                }}
+              >
+                +
+              </button>
             </div>
             <div className={cssStyle.num}>
               {Number(item.price * item.count).toLocaleString()} 원
             </div>
-            <button onClick={() => dispatch(delItem(item._id))}>
+            <button
+              onClick={() => {
+                dispatch(delItem(item._id));
+              }}
+            >
               {iconTrash}
             </button>
           </li>

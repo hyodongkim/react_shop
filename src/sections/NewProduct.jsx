@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import cssStyle from '../css/NewProduct.module.css';
-export default function NewProduct({ productData }) {
+import { useSelector } from 'react-redux';
+
+export default function NewProduct() {
+  let productData = useSelector((a) => a.pData);
+
   let newlist = productData.filter((item) => item.category === 'new');
   let naviagte = useNavigate();
   let goShopList = () => {
